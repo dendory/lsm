@@ -32,6 +32,9 @@ def index():
 
 	id = lsmlib.alphanum(request.args['id'])
 	status = lsmlib.alphanum(request.args['status'], spaces=True)
+	hostname = lsmlib.resolve(request.remote_addr)
+	if hostname == "" and 'name' in request.args:
+		hostname = lsmlib.alphanum(request.args['name'])
 
 	if len(id) != 12: # Check if ID looks valid
 		output['message'] = "Invalid ID."
@@ -48,10 +51,12 @@ def index():
 		state['ip'] = request.remote_addr
 		state['timestamp'] = lsmlib.now()
 		state['status'] = status
+		state['hostname'] = hostname
 	except: # New client
 		state = {
 			'id': id,
 			'ip': request.remote_addr,
+			'hostname': hostname,
 			'timestamp': lsmlib.now(),
 			'status': status,
 			'approved': 'no'

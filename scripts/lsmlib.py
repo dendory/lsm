@@ -15,6 +15,7 @@ import uuid
 import time
 import string
 import random
+import socket
 import datetime
 import logging
 import logging.handlers
@@ -31,9 +32,13 @@ def syslog():
 	log.addHandler(handler)
 	return log
 
-def bold(text):
-	# Return bold text
-	return "\033[1m" + str(text) + "\033[0m"
+def resolve(ip):
+	# Try to resolve an IP address
+	try:
+		hostname = socket.gethostbyaddr(ip)
+		return hostname[0]
+	except:
+		return ""
 
 def base36(number):
 	# Convert an int to alphanum

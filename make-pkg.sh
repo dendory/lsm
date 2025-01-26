@@ -6,12 +6,17 @@
 # make-pkg - Creates the .deb file with everything included.
 #
 
-VERSION="0.0.3"
+VERSION="0.0.10"
 
 # Clean up if needed
 rm -rf /tmp/lsm-server-${VERSION}
 rm -rf /tmp/lsm-client-${VERSION}
 
+# Increment patch level
+OLD_VERSION="$VERSION"
+IFS='.' read -r MAJOR MINOR PATCH <<< "$VERSION"
+PATCH=$((PATCH + 1))
+VERSION="$MAJOR.$MINOR.$PATCH"
 
 # Server package
 
@@ -28,7 +33,9 @@ mkdir -p /tmp/lsm-server-${VERSION}/lib/systemd/system
 cp ./scripts/lsmlib.py /tmp/lsm-server-${VERSION}/usr/lib/python3/dist-packages/lsmlib.py
 cp ./scripts/lsm-server.py /tmp/lsm-server-${VERSION}/usr/bin/lsm-server
 chmod 755 /tmp/lsm-server-${VERSION}/usr/bin/lsm-server
-cp ./misc/lsm-server.conf /tmp/lsm-server-${VERSION}/etc/lsm/lsm.conf
+cp ./scripts/lsm.py /tmp/lsm-server-${VERSION}/usr/bin/lsm
+chmod 755 /tmp/lsm-server-${VERSION}/usr/bin/lsm
+cp ./misc/lsm.conf /tmp/lsm-server-${VERSION}/etc/lsm/lsm.conf
 cp ./misc/lsm-server.service /tmp/lsm-server-${VERSION}/lib/systemd/system/lsm-server.service
 
 # Make debian control file
@@ -37,6 +44,7 @@ echo "Version: ${VERSION}" >> /tmp/lsm-server-${VERSION}/DEBIAN/control
 echo "Section: utils" >> /tmp/lsm-server-${VERSION}/DEBIAN/control
 echo "Priority: optional" >> /tmp/lsm-server-${VERSION}/DEBIAN/control
 echo "Architecture: all" >> /tmp/lsm-server-${VERSION}/DEBIAN/control
+echo "Depends: python3, python3-flask, python3-flask-cors" >> /tmp/lsm-server-${VERSION}/DEBIAN/control
 echo "Maintainer: Patrick Lambert <patrick@dendory.ca>" >> /tmp/lsm-server-${VERSION}/DEBIAN/control
 echo "Description: This is a systems configuration management system, similar to Ruby or Chef, but much more lightweight. It doesn't require Java, Apache, Nginx, a database or anything else. It uses the server/client model and stores everything in files within the /etc/lsm folder." >> /tmp/lsm-server-${VERSION}/DEBIAN/control
 
@@ -77,8 +85,10 @@ mkdir -p /tmp/lsm-client-${VERSION}/etc/cron.d
 
 # Copy files
 cp ./scripts/lsmlib.py /tmp/lsm-client-${VERSION}/usr/lib/python3/dist-packages/lsmlib.py
-cp ./misc/lsm-client.conf /tmp/lsm-client-${VERSION}/etc/lsm/lsm.conf
+cp ./misc/lsm.conf /tmp/lsm-client-${VERSION}/etc/lsm/lsm.conf
 cp ./misc/lsm-client.cron /tmp/lsm-client-${VERSION}/etc/cron.d/lsm-client
+cp ./scripts/lsm-client.py /tmp/lsm-client-${VERSION}/usr/bin/lsm-client
+chmod 755 /tmp/lsm-client-${VERSION}/usr/bin/lsm-client
 
 # Make debian control file
 echo "Package: lsm-client" > /tmp/lsm-client-${VERSION}/DEBIAN/control
@@ -86,6 +96,7 @@ echo "Version: ${VERSION}" >> /tmp/lsm-client-${VERSION}/DEBIAN/control
 echo "Section: utils" >> /tmp/lsm-client-${VERSION}/DEBIAN/control
 echo "Priority: optional" >> /tmp/lsm-client-${VERSION}/DEBIAN/control
 echo "Architecture: all" >> /tmp/lsm-client-${VERSION}/DEBIAN/control
+echo "Depends: python3" >> /tmp/lsm-client-${VERSION}/DEBIAN/control
 echo "Maintainer: Patrick Lambert <patrick@dendory.ca>" >> /tmp/lsm-client-${VERSION}/DEBIAN/control
 echo "Description: This is a systems configuration management system, similar to Ruby or Chef, but much more lightweight. It doesn't require Java, Apache, Nginx, a database or anything else. It uses the server/client model and stores everything in files within the /etc/lsm folder." >> /tmp/lsm-client-${VERSION}/DEBIAN/control
 
@@ -94,4 +105,4 @@ dpkg-deb --build /tmp/lsm-client-${VERSION}
 
 # Clean up
 rm -rf /tmp/lsm-client-${VERSION}
-
+sed -i "s/VERSION=\"${OLD_VERSION}\"/VERSION=\"${VERSION}\"/" "$0"

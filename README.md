@@ -1,6 +1,6 @@
 # Lightweight Systems Manager (LSM)
 
-This is a systems configuration management system, similar to Ruby or Chef, but much more lightweight. It doesn't require Java, Apache, Nginx, a database or anything else. It uses the server/client model and stores everything in files within the `/etc/lsm` folder.
+This is a systems configuration management system, similar to Ruby or Chef, but much more lightweight. It doesn't require Java, Apache, Nginx, a database or anything else. It uses the server/client model and stores everything in files within the `/etc/lsm` folder. It supports Debian/Ubuntu for the server component, and Debian/Ubuntu and Windows for the client.
 
 
 ## Installation
