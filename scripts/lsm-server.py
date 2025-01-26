@@ -19,12 +19,50 @@ def index():
 	# This is the only route used
 
 	global conf
+	log = lsmlib.syslog()
 	output = {
 		'status': 1,
 		'message': ""
 	}
 
-	output['message'] = "No action specified."
+	if 'id' not in request.args and 'status' not in request.args: # Missing arguments
+		output['message'] = "Arguments missing."
+		log.warning("Client {}[]: {}".format(request.remote_addr, output['message']))
+		return jsonify(output)
+
+	id = lsmlib.alphanum(request.args['id'])
+	status = lsmlib.alphanum(request.args['status'], spaces=True)
+
+	if len(id) != 12: # Check if ID looks valid
+		output['message'] = "Invalid ID."
+		log.warning("Client {}[]: {}".format(request.remote_addr, output['message']))
+		return jsonify(output)
+
+	try: # Existing client
+		state = lsmlib.load("/etc/lsm/states/{}".format(id))
+		if state['ip'] != request.remote_addr:
+			if str(conf['allow_ip_changes']).lower() != "yes":
+				output['message'] = "IP changes not allowed."
+				log.warning("Client {}[{}]: {}".format(request.remote_addr, id, output['message']))
+				return jsonify(output)
+		state['ip'] = request.remote_addr
+		state['timestamp'] = lsmlib.now()
+		state['status'] = status
+	except: # New client
+		state = {
+			'id': id,
+			'ip': request.remote_addr,
+			'timestamp': lsmlib.now(),
+			'status': status,
+			'approved': 'no'
+		}
+		log.warning("Client {}[{}]: New connection.".format(request.remote_addr, id))
+
+	# Save client
+	lsmlib.save("/etc/lsm/states/{}".format(id), state)
+
+	output['message'] = "OK"
+	output['status'] = 0
 	return jsonify(output)
 
 @app.after_request

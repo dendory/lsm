@@ -27,7 +27,7 @@ def syslog():
 	log = logging.getLogger("LSM")
 	log.setLevel(logging.DEBUG)
 	handler = logging.handlers.SysLogHandler(address = '/dev/log')
-	handler.setFormatter(logging.Formatter('%(name)s: [%(levelname)s] %(message)s'))
+	handler.setFormatter(logging.Formatter('%(name)s: %(message)s'))
 	log.addHandler(handler)
 	return log
 

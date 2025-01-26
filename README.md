@@ -7,7 +7,7 @@ This is a systems configuration management system, similar to Ruby or Chef, but 
 
 LSM comes as two packages: server and client. If you download the source, you can use the `make-pkg.sh` script to create the package files. Or you can download the packages directly and install them like this
 * Server: `sudo dpkg -i lsm-server-1.0.0.deb`
-* Clients: `sudo dpkg -i lsm-client-1.0.0.deb
+* Clients: `sudo dpkg -i lsm-client-1.0.0.deb`
 
 
 ## Configuration
