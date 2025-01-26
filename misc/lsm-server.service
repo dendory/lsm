@@ -1,0 +1,16 @@
+[Unit]
+Description=Lightweight Systems Manager (LSM)
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=30
+User=root
+ExecStart=/usr/bin/lsm-server
+StandardOutput=append:/var/log/lsm-server.log
+StandardError=append:/var/log/lsm-server.log
+
+[Install]
+WantedBy=multi-user.target

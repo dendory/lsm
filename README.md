@@ -1,6 +1,33 @@
 # Lightweight Systems Manager (LSM)
 
-This is a systems configuration management system, similar to Ruby or Chef, but much more lightweight. It doesn't require Java, Apache, Nginx, a database or anything else. It uses the server/client model and stores everything in files within the */etc/lsm* folder.
+This is a systems configuration management system, similar to Ruby or Chef, but much more lightweight. It doesn't require Java, Apache, Nginx, a database or anything else. It uses the server/client model and stores everything in files within the `/etc/lsm` folder.
+
+
+## Installation
+
+LSM comes as two packages: server and client. If you download the source, you can use the `make-pkg.sh` script to create the package files. Or you can download the packages directly and install them like this
+* Server: `sudo dpkg -i lsm-server-1.0.0.deb`
+* Clients: `sudo dpkg -i lsm-client-1.0.0.deb
+
+
+## Configuration
+
+The main configuration file is in `/etc/lsm/lsm.conf` in JSON format. You need to configure it for your environment on both the clients and server. Here are the configuration files:
+
+### port (server only)
+The port number to listen on.
+
+### server (client only)
+The URL of the server, in this format: `http://server.example.com:port/`
+
+### ssl_cert (server only)
+The location of your SSL certificate if you want to use HTTPS. If you use Certbot that would be `/etc/letsencrypt/live/server.example.com/fullchain.pem`
+
+### ssl_key (server only)
+The location of your SSL key if you want to use HTTPS. If you use Certbot that would be `/etc/letsencrypt/live/server.example.com/privkey.pem`
+
+### allow_ip_changes (server only)
+Whether to allow clients that have registered to connect again from a different IP. This may be an insecure option to set.
 
 
 ## Author
