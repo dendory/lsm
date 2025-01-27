@@ -114,3 +114,7 @@ def filecrc(filename):
 		while chunk := fd.read(8192):
 			crc = zlib.crc32(chunk, crc)
 	return f"{crc & 0xFFFFFFFF:08x}"
+
+def bold(text):
+	# Return bold text
+	return "\033[1m" + str(text) + "\033[0m"

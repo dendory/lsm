@@ -36,7 +36,7 @@ cp ./scripts/lsm-server.py /tmp/lsm-server-${VERSION}/usr/bin/lsm-server
 chmod 755 /tmp/lsm-server-${VERSION}/usr/bin/lsm-server
 cp ./scripts/lsm.py /tmp/lsm-server-${VERSION}/usr/bin/lsm
 chmod 755 /tmp/lsm-server-${VERSION}/usr/bin/lsm
-cp ./misc/lsm.conf /tmp/lsm-server-${VERSION}/etc/lsm/lsm.conf
+cp ./misc/lsm-server.conf /tmp/lsm-server-${VERSION}/etc/lsm/lsm-server.conf
 cp ./misc/lsm-server.service /tmp/lsm-server-${VERSION}/lib/systemd/system/lsm-server.service
 
 # Make debian control file
@@ -50,7 +50,7 @@ echo "Maintainer: Patrick Lambert <patrick@dendory.ca>" >> /tmp/lsm-server-${VER
 echo "Description: This is a systems configuration management system, similar to Ruby or Chef, but much more lightweight. It doesn't require Java, Apache, Nginx, a database or anything else. It uses the server/client model and stores everything in files within the /etc/lsm folder." >> /tmp/lsm-server-${VERSION}/DEBIAN/control
 
 # Make config file
-echo "/etc/lsm/lsm.conf" > /tmp/lsm-server-${VERSION}/DEBIAN/conffiles
+echo "/etc/lsm/lsm-server.conf" > /tmp/lsm-server-${VERSION}/DEBIAN/conffiles
 
 # Make post install script
 echo "#!/bin/bash" > /tmp/lsm-server-${VERSION}/DEBIAN/postinst
@@ -83,16 +83,14 @@ sudo rm -rf /tmp/lsm-server-${VERSION}
 # Make temporary folders
 mkdir -p /tmp/lsm-client-${VERSION}/DEBIAN
 mkdir -p /tmp/lsm-client-${VERSION}/usr/bin
-mkdir -p /tmp/lsm-client-${VERSION}/etc/lsm/manifests
-mkdir -p /tmp/lsm-client-${VERSION}/etc/lsm/states
-mkdir -p /tmp/lsm-client-${VERSION}/etc/lsm/files
+mkdir -p /tmp/lsm-client-${VERSION}/etc/lsm
 mkdir -p /tmp/lsm-client-${VERSION}/usr/lib/python3/dist-packages
 mkdir -p /tmp/lsm-client-${VERSION}/etc/cron.d
 
 # Copy files
 cp ./scripts/lsmlib.py /tmp/lsm-client-${VERSION}/usr/lib/python3/dist-packages/lsmlib.py
-cp ./misc/lsm.conf /tmp/lsm-client-${VERSION}/etc/lsm/lsm.conf
-cp ./misc/lsm-client.cron /tmp/lsm-client-${VERSION}/etc/cron.d/lsm
+cp ./misc/lsm-client.conf /tmp/lsm-client-${VERSION}/etc/lsm/lsm-client.conf
+cp ./misc/lsm-client.cron /tmp/lsm-client-${VERSION}/etc/cron.d/lsm-client
 cp ./scripts/lsm-client.py /tmp/lsm-client-${VERSION}/usr/bin/lsm-client
 chmod 755 /tmp/lsm-client-${VERSION}/usr/bin/lsm-client
 sed -i "s/##VERSION##/${VERSION}/" /tmp/lsm-client-${VERSION}/usr/bin/lsm-client
@@ -108,7 +106,7 @@ echo "Maintainer: Patrick Lambert <patrick@dendory.ca>" >> /tmp/lsm-client-${VER
 echo "Description: This is a systems configuration management system, similar to Ruby or Chef, but much more lightweight. It doesn't require Java, Apache, Nginx, a database or anything else. It uses the server/client model and stores everything in files within the /etc/lsm folder." >> /tmp/lsm-client-${VERSION}/DEBIAN/control
 
 # Make config file
-echo "/etc/lsm/lsm.conf" > /tmp/lsm-client-${VERSION}/DEBIAN/conffiles
+echo "/etc/lsm/lsm-client.conf" > /tmp/lsm-client-${VERSION}/DEBIAN/conffiles
 
 # Create .deb file
 sudo chown -R root:root /tmp/lsm-client-${VERSION}

@@ -126,7 +126,7 @@ def changeserver(response):
 if __name__ == '__main__':
 	global conf
 
-	conf = lsmlib.load("/etc/lsm/lsm.conf")
+	conf = lsmlib.load("/etc/lsm/lsm-server.conf")
 	if conf['ssl_key'] != "" and conf['ssl_cert'] != "":
 		app.run(host='0.0.0.0', port=int(conf['port']), ssl_context=(conf['ssl_cert'], conf['ssl_key']), threaded=True)
 	else:

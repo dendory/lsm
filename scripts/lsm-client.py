@@ -14,9 +14,9 @@ log = lsmlib.syslog()
 
 # Load config file
 try:
-	conf = lsmlib.load("/etc/lsm/lsm.conf")
+	conf = lsmlib.load("/etc/lsm/lsm-client.conf")
 except:
-	log.warning("Could not parse config file: /etc/lsm/lsm.conf")
+	log.warning("Could not parse config file: /etc/lsm/lsm-client.conf")
 	exit(1)
 
 # Load existing state
@@ -48,12 +48,18 @@ try:
 		url = "{}?id={}&name={}&status={}&version=##VERSION##".format(conf['server'], state['id'], str(hostname).split('.')[0], urllib.parse.quote_plus(state['status']))
 	else:
 		url = "{}?id={}&status={}&version=##VERSION##".format(conf['server'], state['id'], urllib.parse.quote_plus(state['status']))
-	manifest = lsmlib.connect(url)
+	result = lsmlib.connect(url)
 except:
 	log.warning("Could not connect to server: {}".format(url))
 	exit(1)
 
 # Do any new actions
+try:
+	manifest = result['manifest']
+except:
+	log.warning("Failed to parse manifest.")
+	exit(1)
+
 
 
 # Save new state
