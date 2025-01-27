@@ -13,6 +13,7 @@ import time
 import json
 import uuid
 import time
+import zlib
 import string
 import random
 import socket
@@ -91,12 +92,25 @@ def connect(url):
 	b = result.decode(charset)
 	return json.loads(b)
 
+def download(url, localfile):
+	# Fetch one of the files
+	urllib.request.urlretrieve(url, localfile)
+	return os.stat(localfile).st_size
+
 def alphanum(text, symbols=False, spaces=False):
 	# Return only alphanumerical characters
 	if spaces and symbols:
-		return re.sub('[^0-9a-zA-Z \_\-\.\[\]\(\)\@\!\?\:\'\;]+', '', text)
+		return re.sub('[^0-9a-zA-Z \,\_\-\.\:\'\;]+', '', text)
 	elif spaces:
 		return re.sub('[^0-9a-zA-Z ]+', '', text)
 	elif symbols:
-		return re.sub('[^0-9a-zA-Z\_\-\.\[\]\(\)\@\!\?\:\'\;]+', '', text)
+		return re.sub('[^0-9a-zA-Z\,\_\-\.\:\'\;]+', '', text)
 	return re.sub('[^0-9a-zA-Z]+', '', text)
+
+def filecrc(filename):
+	# Return a CRC for a file
+	crc = 0
+	with open(filename, 'rb') as fd:
+		while chunk := fd.read(8192):
+			crc = zlib.crc32(chunk, crc)
+	return f"{crc & 0xFFFFFFFF:08x}"

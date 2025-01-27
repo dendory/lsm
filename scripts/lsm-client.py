@@ -45,9 +45,9 @@ except:
 # Connect to server
 try:
 	if hostname != "":
-		url = "{}?id={}&name={}&status={}".format(conf['server'], state['id'], str(hostname).split('.')[0], urllib.parse.quote_plus(state['status']))
+		url = "{}?id={}&name={}&status={}&version=##VERSION##".format(conf['server'], state['id'], str(hostname).split('.')[0], urllib.parse.quote_plus(state['status']))
 	else:
-		url = "{}?id={}&status={}".format(conf['server'], state['id'], urllib.parse.quote_plus(state['status']))
+		url = "{}?id={}&status={}&version=##VERSION##".format(conf['server'], state['id'], urllib.parse.quote_plus(state['status']))
 	manifest = lsmlib.connect(url)
 except:
 	log.warning("Could not connect to server: {}".format(url))

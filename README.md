@@ -1,6 +1,6 @@
 # Lightweight Systems Manager (LSM)
 
-This is a systems configuration management system, similar to Ruby or Chef, but much more lightweight. It doesn't require Java, Apache, Nginx, a database or anything else. It uses the server/client model and stores everything in files within the `/etc/lsm` folder. It supports Debian/Ubuntu for the server component, and Debian/Ubuntu and Windows for the client.
+This is a systems configuration management system, similar to Ruby or Chef, but much more lightweight. It doesn't require Java, Apache, Nginx, a database or anything else. It uses the server/client model and stores everything in files within the `/etc/lsm` folder. It supports Debian/Ubuntu for the server component, and Debian/Ubuntu and Windows for the client. The server part is based on Python's Flask library, and all errors are sent to the system's syslog.
 
 
 ## Installation
@@ -28,6 +28,20 @@ The location of your SSL key if you want to use HTTPS. If you use Certbot that w
 
 ### allow_ip_changes (server only)
 Whether to allow clients that have registered to connect again from a different IP. This may be an insecure option to set.
+
+
+## Commands
+
+The `lsm` utility has a number of commands that can be used to interact with the system. Here are the commands available:
+
+### list
+List all known hosts
+
+### approve <id>
+Approve a host
+
+### unapprove <id>
+Remove approval for a host
 
 
 ## Author
